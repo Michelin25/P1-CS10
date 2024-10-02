@@ -1,0 +1,35 @@
+public void handleImage() {
+		//Instantiating an ArrayList storing points, the array is named markerSet
+		ArrayList<Point> markerSet = new ArrayList<>(); //markerSet will hold the set of points that represent the largest region (the marker)
+
+		//Waiting for the color to be set by the user
+		if (targetColor !=null) {
+			//Instantiating a finder object and passing on the image as input
+			finder = new RegionFinder(image);
+			//Calling the method findRegions to analyze the image to find all the regions of size grater than a given value
+			finder.findRegions(targetColor);
+			//Calling the method largestRegion, to get the arrayList containing the points of the largest region
+			markerSet = finder.largestRegion();
+
+			//If user presses p, new canvas and painting mode is initated
+			if (displayMode == 'p') {
+
+				System.out.println("Painting");
+					if (markerSet != null) {
+						//changing the color of the pixels in the region given by markerSet
+						for (Point point : markerSet) {
+							painting.setRGB(point.x, point.y, paintColor.getRGB());
+						}
+					}
+				//Updating the image to display the canvas with the painting
+				image = painting;
+					//if the user presses r, the method recolor image is used from the class RegionFinder
+			}else if (displayMode == 'r') {
+				finder.recolorImage();
+				System.out.println(finder.getRecoloredImage());
+				image = finder.getRecoloredImage();
+			}
+		}
+		//Displaying the image
+		super.setImage1(image);
+	}
