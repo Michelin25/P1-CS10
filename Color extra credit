@@ -1,0 +1,10 @@
+// Checking if there was a valid color key input
+else if (k == 'y'|| k == 'e'|| k == 'b'|| k == 'l'||k == 'g'){
+			System.out.println("Press 'y'- for yellow, 'e'- for rEd,'b'- for blue, 'g'- for green, and 'l' for black");
+      //Setting the color based on the user input
+			if (k == 'y'){paintColor = Color.yellow;}
+			else if (k == 'e'){paintColor = Color.red;}
+			else if (k == 'b'){paintColor = Color.blue;}
+			else if (k == 'l'){paintColor = Color.black;}
+			else if (k == 'g'){paintColor = Color.green;}
+		}
