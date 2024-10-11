@@ -1,7 +1,6 @@
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * PS-2 provided code
  * A point quadtree: stores an element at a 2D position, with children at the subdivided quadrants
@@ -9,7 +8,11 @@ import java.util.List;
  * 
  * @author Tim Pierson, Dartmouth CS10, Winter 2024, based on prior term code
  * 
+ * 
  */
+
+//Edited by Michal Tvrdon and Aryan Bawa
+
 public class PointQuadtree<E extends Point2D> {
 	private E point;							// the point anchoring this node
 	private int x1, y1;							// upper-left corner of the region
@@ -57,11 +60,10 @@ public class PointQuadtree<E extends Point2D> {
 	 */
 	public void insert(E p2) {
 		// TODO: YOUR CODE HERE
-		// What stores the x, y position
-		
+		// storing the x and y position of the point p2
 		double x = p2.getX();
 		double y = p2.getY();
-		// Checking per quadrant 1
+		// Checking per quadrant 1, including the borderline of the rectangle
 		if (x>=point.getX() && y <=point.getY()){
 			//If quadrant empty add recursively call the insert function
 			if (hasChild(1)){
@@ -71,25 +73,26 @@ public class PointQuadtree<E extends Point2D> {
 				//How do I set all children to Null
 			}
 		}
+		//Checking the second quadrant
 		if (x<point.getX() && y <point.getY()){
-			//If quadrant empty add recursively call the insert function
+			//If quadrant empty add the point recursively, by using the insert function
 			if (hasChild(2)){
 				(c2).insert(p2);
 			} else {
+				//if there is no child creat a new one
 				c2 = new PointQuadtree<E>(p2,(int)x1,y1,(int)point.getX(),(int)point.getY());
-				//How do I set all children to Null
 			}
 		}
+		// Same logic as the previous check this time we include the borderlines
 		if (x<=point.getX() && y >=point.getY()){
 			//If quadrant empty add recursively call the insert function
 			if (hasChild(3)){
 				(c3).insert(p2);
 			} else {
 				c3 = new PointQuadtree<E>(p2,x1,(int)point.getY(),(int)point.getX(),y2);
-				//How do I set all children to Null
 			}
 		}
-		//Use else here
+		//Checking if the point is in the rectangle
 		if (x>point.getX() && y >point.getY()){
 			//If quadrant empty add recursively call the insert function
 			if (hasChild(4)){
@@ -105,6 +108,7 @@ public class PointQuadtree<E extends Point2D> {
 	 */
 	public int size() {
 		// TODO: YOUR CODE HERE
+		// determining the size of three, going down the tree and adding every time we pass a node
 		int num = 1;
 		if (hasChild(1)) num += c1.size();
 		if (hasChild(2)) num += c2.size();
@@ -119,6 +123,7 @@ public class PointQuadtree<E extends Point2D> {
 	 */
 	public List<E> allPoints() {
 		// TODO: YOUR CODE HERE
+		//We first initiate a list and than call the function addToPoints(), which recursivelly travels
 		List<E> f = new ArrayList<E>();
 		addToPoints(f);
 		return f;
@@ -126,6 +131,7 @@ public class PointQuadtree<E extends Point2D> {
 
 	private void addToPoints(List<E> pList) {
 		pList.add(point);
+		// as we pass a node we add it to the list, and check it's children
 		if (hasChild(1)) c1.addToPoints(pList);
 		if (hasChild(2)) c2.addToPoints(pList);
 		if (hasChild(3)) c3.addToPoints(pList);
@@ -139,38 +145,30 @@ public class PointQuadtree<E extends Point2D> {
 	 * @param cr  	circle radius
 	 * @return    	the points in the circle (and the qt's rectangle)
 	 */
+	// Method used to find all the points in the circle
 	public List<E> findInCircle(double cx, double cy, double cr) {
 		// TODO: YOUR CODE HERE
 		List<E> check = new ArrayList<E>();
+		//Find Help is a recursive helper function
 		findHelp(cx,cy,cr,check);
 		return check;
 	}
 
 	public void findHelp(double cx, double cy, double cr, List<E> check){
+		//First we check whether the cirlce of intrest intersects the rectangle
 		if (Geometry.circleIntersectsRectangle(cx,cy,cr,x1,y1,x2,y2)){
+			// if it does, we check if the point of intrest is in the circle
 			if (Geometry.pointInCircle(point.getX(), point.getY(),cx,cy,cr)) {
 				check.add(point);
 			}
+			// than we check the children of the point
 			if (hasChild(1)) c1.findHelp(cx,cy,cr,check);
 			if (hasChild(2)) c2.findHelp(cx,cy,cr,check);
 			if (hasChild(3)) c3.findHelp(cx,cy,cr,check);
 			if (hasChild(4)) c4.findHelp(cx,cy,cr,check);
 		}
 	}
-
 	// TODO: YOUR CODE HERE for any helper methods
-	public String toString() {
-		// Start with level 0 and an empty string for indentation
-		return toStringHelper("");
-	}
-
-	private String toStringHelper(String indent) {
-		String res = indent + point.getX() + point.getY() +"\n";
-		if (hasChild(1)) res += c1.toStringHelper(indent + " ");
-		if (hasChild(2)) res += c2.toStringHelper(indent + " ");
-		if (hasChild(3)) res += c3.toStringHelper(indent + " ");
-		if (hasChild(4)) res += c4.toStringHelper(indent + " ");
-		return res;
-	}
 
 }
+
