@@ -1,0 +1,7 @@
+//Going by hight down the treee
+		level+=1;
+		// checking if the current node has children, if it does, draw the children
+		if (tree.hasChild(4)) drawTree(g,tree.getChild(4),level);
+		if (tree.hasChild(3)) drawTree(g,tree.getChild(3), level);
+		if (tree.hasChild(2)) drawTree(g,tree.getChild(2), level);
+		if (tree.hasChild(1)) drawTree(g,tree.getChild(1), level);
